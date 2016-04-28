@@ -26,4 +26,4 @@ docker run -d --restart=always --name "${NAME}" \
 	 -e MYSQL_USER=${DB_USER} \
 	 -e MYSQL_USER_PASSWORD=${DB_USER_PASS} \
 	 -e MYSQL_USER_DATABASE=${DB_NAME} \
-	 romeohua/simple-mysql:test
+	 romeohua/simple-mysql:v5.7
