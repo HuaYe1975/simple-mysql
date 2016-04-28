@@ -19,6 +19,7 @@ docker stop "${NAME}" || true
 sleep 1
 docker rm "${NAME}" || true
 sleep 1
+
 docker run -d --restart=always --name "${NAME}" \
 	 -v "${MYSQL_LOG}:/var/log/mysql" \
 	 -v "${MYSQL_DATA}:/var/lib/mysql" \

@@ -16,18 +16,24 @@ rm -rf /var/lib/mysql/*
 
 # Initial Setup
 if [ ! -d "/var/lib/mysql/mysql" ] ; then
-    mysql_install_db
-    mysqld_safe &
+    mysqld --initialize-insecure=on
+
+    mysqld --skip-networking &
+    pid="$!"
+
     sleep 10
     mysqladmin -u root password ${MYSQL_ROOT_PASSWORD}
     mysql -e "CREATE DATABASE ${MYSQL_USER_DATABASE};" -p${MYSQL_ROOT_PASSWORD}
     mysql -e "CREATE USER '${MYSQL_USER}'@'localhost' IDENTIFIED BY '${MYSQL_USER_PASSWORD}';" -p${MYSQL_ROOT_PASSWORD}
     mysql -e "CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_USER_PASSWORD}';" -p${MYSQL_ROOT_PASSWORD}
-    mysql -e "GRANT ALL PRIVILEGES ON ${MYSQL_USER_DATABASE}.* TO '${MYSQL_USER}'@'localhost';" -p${MYSQL_ROOT_PASSWORD}
-    mysql -e "GRANT ALL PRIVILEGES ON ${MYSQL_USER_DATABASE}.* TO '${MYSQL_USER}'@'%';" -p${MYSQL_ROOT_PASSWORD}
-    killall mysqld
+    mysql -e "GRANT ALL ON ${MYSQL_USER_DATABASE}.* TO '${MYSQL_USER}'@'localhost';" -p${MYSQL_ROOT_PASSWORD}
+    mysql -e "GRANT ALL ON ${MYSQL_USER_DATABASE}.* TO '${MYSQL_USER}'@'%';" -p${MYSQL_ROOT_PASSWORD}
+    
+
+    if ! kill -s TERM "$pid" || ! wait "$pid"; then
+        exit 1
+    fi
     sleep 10
 fi
 
-#exec /usr/sbin/mysqld
-mysqld_safe
+exec /usr/sbin/mysqld

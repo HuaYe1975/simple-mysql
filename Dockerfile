@@ -13,14 +13,13 @@ VOLUME /var/log/mysql
 # Install MySQL
 # -----------------------------------------------------------------------------
 RUN yum -y update \
-	&& yum -y localinstall http://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm --nogpgcheck \
+	&& yum -y localinstall http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm --nogpgcheck \
 	&& yum --setopt=tsflags=nodocs -y install mysql-community-server \
-	&& yum -y install psmisc \
 	; rm -rf /var/cache/yum/* \
 	; yum clean all
 
-ENV MYSQL_MAJOR 5.6
-ENV MYSQL_VERSION 5.6.30
+ENV MYSQL_MAJOR 5.7
+ENV MYSQL_VERSION 5.7.12
 
 ENV MYSQL_ROOT_PASSWORD "romeohua"
 ENV MYSQL_USER "romeohua"
